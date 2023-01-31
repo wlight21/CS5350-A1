@@ -4,7 +4,7 @@
 	- from Experiments directory, execute run.sh on CADE with ./run.sh
 	- this script is very short, it simply runs main.py
 
-- output
+- output overview
 
 	- all experiment outputs are organized into text files
 	- baseline.txt contains baseline test information for the most common
