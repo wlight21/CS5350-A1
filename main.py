@@ -80,8 +80,8 @@ def main():
 	folds = { i:pandas.read_csv("data/data/CVfolds/fold%s.csv" % i) for i in range(1, 6, 1) }
 	for depth in (depths := [1,2,3,4,5]):
 
-		avg_train_acc = 0
-		avg_test_acc = 0
+		train_accs = []
+		test_accs = []
 
 		for fold in folds.keys():
 
@@ -89,20 +89,25 @@ def main():
 			train_set_fold = pandas.concat([folds[i] for i in indexes])
 			test_set_fold = folds[fold]
 			tree_limited = DecisionTree(shannon_entropy, train_set_fold, features, StringBuilder(), max_depth=depth)
-			avg_train_acc += tree_limited.total_predict(train_set_fold) / len(train_set_fold)
-			avg_test_acc += tree_limited.total_predict(test_set_fold) / len(test_set_fold)
+			train_accs.append(tree_limited.total_predict(train_set_fold) / len(train_set_fold))
+			test_accs.append(tree_limited.total_predict(test_set_fold) / len(test_set_fold))
 
 			with open("id3_depth%s.txt" % depth, "w") as f:
 				tree_limited.logger.dump_output(f)
 				f.close()
 
-		avg_train_acc /= len(depths)
-		avg_test_acc /= len(depths)
+		avg_train_acc = sum(train_accs) / len(train_accs)
+		std_dev_train_acc = math.sqrt(sum([(acc - avg_train_acc)**2 for acc in train_accs]) / len(train_accs))
+
+		avg_test_acc = sum(test_accs) / len(test_accs)
+		std_dev_test_acc = math.sqrt(sum([(acc - avg_test_acc)**2 for acc in test_accs]) / len(test_accs))
 
 		with open("avg_acc_depth%s.txt" % depth, "w") as f:
 			dlp_output = StringBuilder()
-			dlp_output.append_line("Avg. Depth_%s Accuracy on 5-Fold Training Data: %f" % (depth, avg_train_acc), True)
-			dlp_output.append_line("Avg. Depth_%s Accuracy on 5-Fold Test Data: %f" % (depth, avg_test_acc), True)
+			dlp_output.append_line("Avg. Depth%s Accuracy on 5-Fold Training Data: %f" % (depth, avg_train_acc))
+			dlp_output.append_line("Avg. Depth%s Std. Deviation on 5-Fold Training Data: %f" % (depth, std_dev_train_acc), True)
+			dlp_output.append_line("Avg. Depth%s Accuracy on 5-Fold Test Data: %f" % (depth, avg_test_acc))
+			dlp_output.append_line("Avg. Depth%s Std. Deviation on 5-Fold Test Data: %f" % (depth, std_dev_test_acc), True)
 			dlp_output.dump_output(f)
 			f.close()
 
@@ -112,9 +117,9 @@ def main():
 	tree_best_limit = DecisionTree(shannon_entropy, train_set_fold, features, StringBuilder(), best_tree.max_depth)
 	with open("acc_depth%s.txt" % best_tree.max_depth, "w") as f:
 		out = StringBuilder()
-		out.append_line("Depth_%s Tree Acc. on train.csv: %f" % 
+		out.append_line("Depth%s Tree Acc. on train.csv: %f" % 
 						(tree_best_limit.max_depth, tree_best_limit.total_predict(train_set) / len(train_set)), True)
-		out.append_line("Depth_%s Tree Acc. on train.csv: %f" % 
+		out.append_line("Depth%s Tree Acc. on train.csv: %f" % 
 						(tree_best_limit.max_depth, tree_best_limit.total_predict(test_set) / len(test_set)), True)
 		out.dump_output(f)
 
