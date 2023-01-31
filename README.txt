@@ -1,6 +1,7 @@
 - running experiments
-
-	- execute run.sh on CADE with ./run.sh
+	
+	- unzip submitted zip file Experiments.zip
+	- from Experiments directory, execute run.sh on CADE with ./run.sh
 	- this script is very short, it simply runs main.py
 
 - output
