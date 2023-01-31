@@ -34,8 +34,8 @@ def main():
 				 "lug_boot" : ["small", "med", "big"], 
 				 "safety" : ["low", "high", "med"]
 			   }
-	train_set = pandas.read_csv("data\\data\\train.csv")
-	test_set = pandas.read_csv("data\\data\\test.csv")
+	train_set = pandas.read_csv("data/data/train.csv")
+	test_set = pandas.read_csv("data/data/test.csv")
 
 	with open("baseline.txt", "w") as f:
 		out = StringBuilder()
@@ -77,7 +77,7 @@ def main():
 		f.close()
 
 	avg_accs = {}
-	folds = { i:pandas.read_csv("data\\data\\CVfolds\\fold%s.csv" % i) for i in range(1, 6, 1) }
+	folds = { i:pandas.read_csv("data/data/CVfolds/fold%s.csv" % i) for i in range(1, 6, 1) }
 	for depth in (depths := [1,2,3,4,5]):
 
 		avg_train_acc = 0
