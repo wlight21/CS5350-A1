@@ -6,7 +6,7 @@
 
 - output overview
 
-	- all experiment outputs are organized into text files
+	- executing run.sh will produce a number of .txt files
 	- baseline.txt contains baseline test information for the most common
 	  label in train.txt
 	- acc_* files contain accuracy info on train.csv and test.csv for decision trees
